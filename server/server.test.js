@@ -15,8 +15,13 @@ const todos = [
 
 beforeEach((done) => {
   Todo.remove({}).then(() => {
-    return Todo.insertMany(todos);
-  }).then(()=>done());
+    return Todo.insertMany(todos)
+    .then(()=>done());
+  })
+  .catch((e)=>{
+    console.log(e);
+    done();
+  });
 });
 
 describe("Post /todos", () => {
@@ -37,7 +42,7 @@ describe("Post /todos", () => {
         Todo.find({text}).then((todos)=>{
           expect(todos.length).toBe(1);
           expect(todos[0].text).toBe(text);
-         done();
+          done();
         }).catch((err) =>{done(err)});
       });
   });
