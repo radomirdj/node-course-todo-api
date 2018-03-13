@@ -1,7 +1,7 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 
-require('../config/config');
+require('./config/config');
 let {Todo} = require('./models/todo');
 let {Uset} = require('./models/user');
 
