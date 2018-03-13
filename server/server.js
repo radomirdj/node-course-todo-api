@@ -4,6 +4,7 @@ let bodyParser = require('body-parser');
 let {Todo} = require('./models/todo');
 let {Uset} = require('./models/user');
 
+const port = process.env.PORT || 3000;
 let app = express();
 app.use(bodyParser.json());
 
@@ -30,7 +31,7 @@ app.get("/todos", (req, res) => {
 
 let port = 3000;
 app.listen(port, () => {
-  console.log(`Server started on log ${3000}`);
+  console.log(`Server started on log ${port}`);
 });
 
 module.exports = {app};
