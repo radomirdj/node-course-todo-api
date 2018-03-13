@@ -20,6 +20,14 @@ app.post("/todos", (req, res) => {
   });
 });
 
+app.get("/todos", (req, res) => {
+  Todo.find({}).then(todoList => {
+    res.send({todoList});
+  }).catch((err) => {
+    res.status(400).send(err);
+  });
+});
+
 let port = 3000;
 app.listen(port, () => {
   console.log(`Server started on log ${3000}`);
