@@ -29,7 +29,6 @@ app.get("/todos", (req, res) => {
   });
 });
 
-let port = 3000;
 app.listen(port, () => {
   console.log(`Server started on log ${port}`);
 });
