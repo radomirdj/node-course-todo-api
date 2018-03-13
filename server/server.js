@@ -4,7 +4,7 @@ let bodyParser = require('body-parser');
 let {Todo} = require('./models/todo');
 let {Uset} = require('./models/user');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 let app = express();
 app.use(bodyParser.json());
 
