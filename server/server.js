@@ -1,5 +1,6 @@
 let express = require('express');
 let bodyParser = require('body-parser');
+let _ = require('lodash');
 
 require('./config/config');
 let {Todo} = require('./models/todo');
@@ -35,11 +36,14 @@ app.get("/todos", (req, res) => {
 //ROUTE /users
 app.post("/users", (req, res) => {
   let body = _.pick(req.body, ['email', 'password']);
-  let todo = new User(body);
+  let user = new User(body);
 
-  todo.save().then((doc) => {
-    res.send(doc);
-  }, (err) => {
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token)=>{
+    res.header('x-auth', token).send(user);
+  }).catch((err) => {
+    console.log(err);
     res.status(400).send(err);
   });
 });
