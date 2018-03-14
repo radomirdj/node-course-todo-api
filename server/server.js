@@ -3,7 +3,7 @@ let bodyParser = require('body-parser');
 
 require('./config/config');
 let {Todo} = require('./models/todo');
-let {Uset} = require('./models/user');
+let {User} = require('./models/user');
 
 const port = process.env.PORT;
 let app = express();
@@ -26,6 +26,20 @@ app.get("/todos", (req, res) => {
   Todo.find({}).then(todoList => {
     res.send({todoList});
   }).catch((err) => {
+    res.status(400).send(err);
+  });
+});
+
+
+
+//ROUTE /users
+app.post("/users", (req, res) => {
+  let body = _.pick(req.body, ['email', 'password']);
+  let todo = new User(body);
+
+  todo.save().then((doc) => {
+    res.send(doc);
+  }, (err) => {
     res.status(400).send(err);
   });
 });
