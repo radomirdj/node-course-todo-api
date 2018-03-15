@@ -82,6 +82,31 @@ UserSchema.statics.findByToken = function(token) {
   });
 };
 
+UserSchema.statics.findByCredentalias = function(email, password) {
+  return User.findOne({email}).then((user) => {
+    if(!user) {
+      return Promise.reject("Can't find user");
+    }
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if(err) {
+          return reject(err);
+        }
+        if(!res) {
+          return reject();
+        }
+        return resolve(user);
+      });
+    });
+    // bcrypt.compare(password, user.password, (err, res) => {
+    //   if(!res) {
+    //     return Promise.reject();
+    //   }
+    //   return Promise.resolve();
+    // });
+  });
+};
+
 User = mongoose.model("User", UserSchema);
 
 module.exports = {User};

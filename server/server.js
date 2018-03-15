@@ -32,8 +32,6 @@ app.get("/todos", (req, res) => {
   });
 });
 
-
-
 //ROUTE /users
 app.post("/users", (req, res) => {
   let body = _.pick(req.body, ['email', 'password']);
@@ -51,6 +49,18 @@ app.post("/users", (req, res) => {
 
 app.get("/users/me", authentificate, (req, res) => {
   res.send(req.user);
+});
+
+app.post("/users/login", (req, res) => {
+  let body = _.pick(req.body, ['email', 'password']);
+  User.findByCredentalias(body.email, body.password).then((user) => {
+    user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch(err => {
+    console.log("!!!!!!!!!!", err);
+    res.status(400).send();
+  });
 });
 
 app.listen(port, () => {
