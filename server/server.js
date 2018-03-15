@@ -5,6 +5,7 @@ let _ = require('lodash');
 require('./config/config');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
+let {authentificate} = require('./middleware/authenticate');
 
 const port = process.env.PORT;
 let app = express();
@@ -46,6 +47,10 @@ app.post("/users", (req, res) => {
     console.log(err);
     res.status(400).send(err);
   });
+});
+
+app.get("/users/me", authentificate, (req, res) => {
+  res.send(req.user);
 });
 
 app.listen(port, () => {
