@@ -11,56 +11,54 @@ const port = process.env.PORT;
 let app = express();
 app.use(bodyParser.json());
 
-app.post("/todos", (req, res) => {
+app.post("/todos", async (req, res) => {
   let todo = new Todo({
     text: req.body.text
   });
-  todo.save().then((doc) => {
-    console.log(`Created todo: ${doc}`);
+  try {
+    let doc = await todo.save();
     res.send(doc);
-  }, (err) => {
+  } catch(err) {
     console.log(`Can't save todo: ${err}`)
     res.status(400).send(err);
-  });
+  }
 });
 
-app.get("/todos", (req, res) => {
-  Todo.find({}).then(todoList => {
+app.get("/todos", async (req, res) => {
+  try {
+    let todoList = await Todo.find({});
     res.send({todoList});
-  }).catch((err) => {
+  } catch(e) {
     res.status(400).send(err);
-  });
+  }
 });
 
 //ROUTE /users
-app.post("/users", (req, res) => {
+app.post("/users", async (req, res) => {
   let body = _.pick(req.body, ['email', 'password']);
   let user = new User(body);
-
-  user.save().then(() => {
-    return user.generateAuthToken();
-  }).then((token)=>{
+  try {
+    await user.save();
+    let token = await user.generateAuthToken();
     res.header('x-auth', token).send(user);
-  }).catch((err) => {
-    console.log(err);
+  } catch(e) {
     res.status(400).send(err);
-  });
+  }
 });
 
 app.get("/users/me", authentificate, (req, res) => {
   res.send(req.user);
 });
 
-app.post("/users/login", (req, res) => {
+app.post("/users/login", async (req, res) => {
   let body = _.pick(req.body, ['email', 'password']);
-  User.findByCredentalias(body.email, body.password).then((user) => {
-    user.generateAuthToken().then((token) => {
-      res.header('x-auth', token).send(user);
-    });
-  }).catch(err => {
-    console.log("!!!!!!!!!!", err);
+  try {
+    let user = await User.findByCredentalias(body.email, body.password);
+    let token = await user.generateAuthToken();
+    res.header('x-auth', token).send(user);
+  } catch(e) {
     res.status(400).send();
-  });
+  }
 });
 
 app.listen(port, () => {
